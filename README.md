@@ -12,5 +12,6 @@ A collection of Proof of Concepts (POCs) exploring various features, APIs, and l
 - [Concurrency: Executor Service (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-concurrency-executor-service/): Exploring various thread pool strategies and Virtual Threads using the ExecutorService API.
 - [Concurrency: Callable and Future (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-concurrency-callable-future/): Handling asynchronous tasks that return results and managing batch execution.
 - [Concurrency: Locks and Atomic Variables (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-locks-atomic-vars/): Comparing synchronization techniques like synchronized methods, ReentrantLock, ReadWriteLock, and Atomic variables.
+- [Annotations and Reflections (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-annotations-reflections/): Creating custom annotations and using reflection to build a simplified routing system.
 
 Each project contains its own `README.md` with detailed topic links to the source code.
