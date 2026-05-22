@@ -1,6 +1,5 @@
 package com.guisfco;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ControllerExample {
@@ -10,14 +9,19 @@ public class ControllerExample {
         return "Hello, World!";
     }
 
-    @GetMapping(value = "/users", enabled = false)
+    @GetMapping("/users")
     public List<User> getUsers() {
-        return Collections.emptyList();
+        return List.of(new User("Guilherme"), new User("Yasmin"));
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/users/1")
     public User getUser() {
         return new User("Guilherme");
+    }
+
+    @GetMapping(value = "/test", enabled = false)
+    public void test() {
+        IO.println("This is just a test.");
     }
 
     public void internalMethod() {
