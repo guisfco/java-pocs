@@ -5,13 +5,16 @@ import java.util.UUID;
 
 public class PaymentService {
 
+    private final PaymentValidationService paymentValidationService;
     private final PaymentRepository paymentRepository;
     private final NotificationClient notificationClient;
     private final FraudClient fraudClient;
 
-    public PaymentService(PaymentRepository paymentRepository,
+    public PaymentService(PaymentValidationService paymentValidationService,
+                          PaymentRepository paymentRepository,
                           NotificationClient notificationClient,
                           FraudClient fraudClient) {
+        this.paymentValidationService = paymentValidationService;
         this.paymentRepository = paymentRepository;
         this.notificationClient = notificationClient;
         this.fraudClient = fraudClient;
@@ -19,6 +22,7 @@ public class PaymentService {
 
     public Payment create(BigDecimal amount) {
         var payment = new Payment(UUID.randomUUID(), amount, PaymentStatus.CREATED);
+        paymentValidationService.validate(payment);
         return paymentRepository.save(payment);
     }
 

@@ -3,6 +3,7 @@ package com.guisfco;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -33,6 +34,9 @@ class PaymentServiceTest {
     private PaymentRepository paymentRepository;
 
     @Spy // Allow us to use a real instance and execute real methods, and still mock specific methods
+    private PaymentValidationService paymentValidationService;
+
+    @Mock
     private EmailNotificationClient notificationClient;
 
     @Mock
@@ -44,9 +48,15 @@ class PaymentServiceTest {
 
         var savedPayment = assertDoesNotThrow(() -> paymentService.create(BigDecimal.TEN));
 
-        assertNotNull(savedPayment.id());
-        assertEquals(PaymentStatus.CREATED, savedPayment.status());
+        var paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
+
+        verify(paymentValidationService).validate(paymentArgumentCaptor.capture());
         verifyNoInteractions(notificationClient, fraudClient);
+
+        assertEquals(paymentArgumentCaptor.getValue(), savedPayment);
+        assertNotNull(savedPayment.id());
+        assertEquals(BigDecimal.TEN, savedPayment.amount());
+        assertEquals(PaymentStatus.CREATED, savedPayment.status());
     }
 
     @Test
@@ -94,6 +104,15 @@ class PaymentServiceTest {
         verify(fraudClient).isFraud(payment);
         verify(paymentRepository).save(any());
         verify(notificationClient).notifyPaymentApproved(approvedPayment);
+    }
+
+    @Test
+    void whenDeletingPaymentThenDeleteCorrectId() {
+        var paymentId = UUID.randomUUID();
+
+        assertDoesNotThrow(() -> paymentService.delete(paymentId));
+
+        verify(paymentRepository).deleteById(paymentId);
     }
 
 }

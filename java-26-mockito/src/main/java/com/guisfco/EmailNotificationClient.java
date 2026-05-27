@@ -1,12 +1,10 @@
 package com.guisfco;
 
-import java.math.BigDecimal;
-
 public class EmailNotificationClient implements NotificationClient {
 
     @Override
     public void notifyPaymentApproved(Payment payment) {
-        if (payment.amount().compareTo(BigDecimal.ZERO) <= 0) {
+        if (!PaymentStatus.APPROVED.equals(payment.status())) {
             throw new IllegalArgumentException("Invalid amount");
         }
 
