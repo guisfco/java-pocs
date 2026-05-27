@@ -2,12 +2,25 @@ package com.guisfco;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) // Automatically initialize and manage Mockito annotations during test execution. Equivalent to MockitoAnnotations.openMocks(this) (manual approach)
 class PaymentServiceTest {
@@ -22,9 +35,65 @@ class PaymentServiceTest {
     @Spy // Allow us to use a real instance and execute real methods, and still mock specific methods
     private EmailNotificationClient notificationClient;
 
+    @Mock
+    private FraudClientImpl fraudClient;
+
     @Test
-    void test() {
-        assertTrue(true);
+    void whenCreatePaymentSuccessfullyThenReturnSavedPayment() {
+        when(paymentRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+
+        var savedPayment = assertDoesNotThrow(() -> paymentService.create(BigDecimal.TEN));
+
+        assertNotNull(savedPayment.id());
+        assertEquals(PaymentStatus.CREATED, savedPayment.status());
+        verifyNoInteractions(notificationClient, fraudClient);
+    }
+
+    @Test
+    void whenApprovingPaymentButPaymentNotFoundThenThrowException() {
+        var paymentId = UUID.randomUUID();
+
+        when(paymentRepository.findById(paymentId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> paymentService.approve(paymentId));
+
+        verify(paymentRepository, never()).save(any());
+        verifyNoInteractions(notificationClient, fraudClient);
+    }
+
+    @Test
+    void whenApprovingFraudulentPaymentThenThrowException() {
+        var paymentId = UUID.randomUUID();
+        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED);
+
+        when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
+        when(fraudClient.isFraud(payment)).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> paymentService.approve(paymentId));
+
+        verify(fraudClient).isFraud(payment);
+        verify(paymentRepository, never()).save(any());
+        verifyNoInteractions(notificationClient);
+    }
+
+    @Test
+    void whenApprovingValidPaymentThenReturnApprovedPayment() {
+        var paymentId = UUID.randomUUID();
+        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED);
+
+        when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
+        when(fraudClient.isFraud(payment)).thenReturn(false);
+        when(paymentRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+
+        var approvedPayment = assertDoesNotThrow(() -> paymentService.approve(paymentId));
+
+        assertEquals(payment.id(), approvedPayment.id());
+        assertEquals(PaymentStatus.APPROVED, approvedPayment.status());
+        assertEquals(payment.amount(), approvedPayment.amount());
+
+        verify(fraudClient).isFraud(payment);
+        verify(paymentRepository).save(any());
+        verify(notificationClient).notifyPaymentApproved(approvedPayment);
     }
 
 }
