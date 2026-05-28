@@ -6,10 +6,12 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -63,6 +66,7 @@ class PaymentServiceTest {
     void whenApprovingPaymentButPaymentNotFoundThenThrowException() {
         var paymentId = UUID.randomUUID();
 
+        // thenReturn accepts multiple values, in case we want a different return for each execution
         when(paymentRepository.findById(paymentId)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> paymentService.approve(paymentId));
@@ -74,7 +78,7 @@ class PaymentServiceTest {
     @Test
     void whenApprovingFraudulentPaymentThenThrowException() {
         var paymentId = UUID.randomUUID();
-        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED);
+        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED, Instant.now());
 
         when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
         when(fraudClient.isFraud(payment)).thenReturn(true);
@@ -87,9 +91,26 @@ class PaymentServiceTest {
     }
 
     @Test
+    void whenApprovingPaymentExpiredThenThrowException() {
+        var paymentId = UUID.randomUUID();
+        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED, Instant.now());
+
+        when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
+
+        try (var utils = mockStatic(PaymentUtils.class)) {
+            utils.when(() -> PaymentUtils.isPaymentExpired(payment.createdAt())).thenReturn(true);
+
+            assertThrows(IllegalStateException.class, () -> paymentService.approve(paymentId));
+        }
+
+        verify(paymentRepository, never()).save(any());
+        verifyNoInteractions(fraudClient, notificationClient);
+    }
+
+    @Test
     void whenApprovingValidPaymentThenReturnApprovedPayment() {
         var paymentId = UUID.randomUUID();
-        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED);
+        var payment = new Payment(paymentId, BigDecimal.TEN, PaymentStatus.CREATED, Instant.now());
 
         when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
         when(fraudClient.isFraud(payment)).thenReturn(false);

@@ -1,6 +1,7 @@
 package com.guisfco;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 public class PaymentService {
@@ -21,7 +22,7 @@ public class PaymentService {
     }
 
     public Payment create(BigDecimal amount) {
-        var payment = new Payment(UUID.randomUUID(), amount, PaymentStatus.CREATED);
+        var payment = new Payment(UUID.randomUUID(), amount, PaymentStatus.CREATED, Instant.now());
         paymentValidationService.validate(payment);
         return paymentRepository.save(payment);
     }
@@ -30,11 +31,15 @@ public class PaymentService {
         var payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
+        if (PaymentUtils.isPaymentExpired(payment.createdAt())) {
+            throw new IllegalStateException("Payment expired");
+        }
+
         if (fraudClient.isFraud(payment)) {
             throw new IllegalStateException("Fraud detected");
         }
 
-        var approved = new Payment(payment.id(), payment.amount(), PaymentStatus.APPROVED);
+        var approved = new Payment(payment.id(), payment.amount(), PaymentStatus.APPROVED, payment.createdAt());
         var saved = paymentRepository.save(approved);
 
         notificationClient.notifyPaymentApproved(saved);
