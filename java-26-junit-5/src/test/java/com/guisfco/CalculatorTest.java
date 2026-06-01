@@ -2,8 +2,15 @@ package com.guisfco;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,5 +50,46 @@ class CalculatorTest {
     void shouldThrowExceptionWhenDividingByZero() {
         var exception = assertThrows(IllegalArgumentException.class, () -> calculator.divide(1, 0));
         assertEquals("Cannot divide by zero", exception.getMessage());
+    }
+
+    @DisplayName("Should return true for even numbers")
+    @ParameterizedTest(name = "when number is {0}")
+    @ValueSource(ints = {2, 4, 6, 8, 10})
+    void shouldReturnTrueForEvenNumbers(int number) {
+        assertTrue(calculator.isEven(number));
+    }
+
+    @DisplayName("Should return false for odd numbers")
+    @ParameterizedTest(name = "when number is {0}")
+    @MethodSource("oddNumbers")
+    void shouldReturnFalseForOddNumbers(int number) {
+        assertFalse(calculator.isEven(number));
+    }
+
+    @DisplayName("Should sum numbers and return result")
+    @ParameterizedTest(name = "{0} + {1} = {2}")
+    @MethodSource("sumProvider")
+    void shouldReturnFalseForOddNumbers(int a, int b, int expected) {
+        assertEquals(expected, calculator.sum(a, b));
+    }
+
+    private static Stream<Arguments> oddNumbers() {
+        return Stream.of(
+                Arguments.of(1),
+                Arguments.of(3),
+                Arguments.of(5),
+                Arguments.of(7),
+                Arguments.of(9)
+        );
+    }
+
+    private static Stream<Arguments> sumProvider() {
+        return Stream.of(
+                Arguments.of(1, 3, 4),
+                Arguments.of(5, 6, 11),
+                Arguments.of(4, 9, 13),
+                Arguments.of(2, 4, 6),
+                Arguments.of(0, 1, 1)
+        );
     }
 }
