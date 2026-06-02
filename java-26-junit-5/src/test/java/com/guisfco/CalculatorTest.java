@@ -1,5 +1,9 @@
 package com.guisfco;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +21,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CalculatorTest {
 
     private final Calculator calculator = new Calculator();
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Runs once before all tests");
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        System.out.println("Runs before each test");
+    }
+
+    @AfterEach
+    void afterEach() {
+        System.out.println("Runs after each test");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("Runs once after all tests");
+    }
 
     @DisplayName("Should sum two numbers and return a result")
     @Test
