@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -42,59 +43,79 @@ class CalculatorTest {
         System.out.println("Runs once after all tests");
     }
 
-    @DisplayName("Should sum two numbers and return a result")
-    @Test
-    void shouldSumTwoNumbers() {
-        var result = calculator.sum(2, 3);
-        assertEquals(5, result);
+    @Nested
+    @DisplayName("Sum tests")
+    class SumTests {
+
+        @DisplayName("Should sum two numbers and return a result")
+        @Test
+        void shouldSumTwoNumbers() {
+            var result = calculator.sum(2, 3);
+            assertEquals(5, result);
+        }
+
+        @DisplayName("Should sum numbers and return result")
+        @ParameterizedTest(name = "{0} + {1} = {2}")
+        @MethodSource("com.guisfco.CalculatorTest#sumProvider")
+        void shouldSumTwoNumbers(int a, int b, int expected) {
+            assertEquals(expected, calculator.sum(a, b));
+        }
     }
 
-    @DisplayName("Should subtract two numbers and return a result")
-    @Test
-    void shouldSubtractTwoNumbers() {
-        var result = calculator.subtract(10, 3);
-        assertEquals(7, result);
+    @Nested
+    @DisplayName("Subtract tests")
+    class SubtractTests {
+
+        @DisplayName("Should subtract two numbers and return a result")
+        @Test
+        void shouldSubtractTwoNumbers() {
+            var result = calculator.subtract(10, 3);
+            assertEquals(7, result);
+        }
     }
 
-    @DisplayName("Should divide two numbers and return a result")
-    @Test
-    void shouldDivideTwoNumbers() {
-        var result = calculator.divide(10, 5);
-        assertEquals(2, result);
+    @Nested
+    @DisplayName("Divide tests")
+    class DivideTests {
+
+        @DisplayName("Should divide two numbers and return a result")
+        @Test
+        void shouldDivideTwoNumbers() {
+            var result = calculator.divide(10, 5);
+            assertEquals(2, result);
+        }
+
+        @DisplayName("When dividing by zero then should throw exception")
+        @Test
+        void shouldThrowExceptionWhenDividingByZero() {
+            var exception = assertThrows(IllegalArgumentException.class, () -> calculator.divide(1, 0));
+            assertEquals("Cannot divide by zero", exception.getMessage());
+        }
     }
 
-    @DisplayName("When number is even then should return true")
-    @Test
-    void shouldReturnTrueWhenNumberIsEven() {
-        assertTrue(calculator.isEven(2));
-    }
+    @Nested
+    @DisplayName("Even number tests")
+    class EvenNumberTests {
 
-    @DisplayName("When dividing by zero then should throw exception")
-    @Test
-    void shouldThrowExceptionWhenDividingByZero() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> calculator.divide(1, 0));
-        assertEquals("Cannot divide by zero", exception.getMessage());
-    }
+        @DisplayName("When number is even then should return true")
+        @Test
+        void shouldReturnTrueWhenNumberIsEven() {
+            assertTrue(calculator.isEven(2));
+        }
 
-    @DisplayName("Should return true for even numbers")
-    @ParameterizedTest(name = "when number is {0}")
-    @ValueSource(ints = {2, 4, 6, 8, 10})
-    void shouldReturnTrueForEvenNumbers(int number) {
-        assertTrue(calculator.isEven(number));
-    }
+        @DisplayName("Should return true for even numbers")
+        @ParameterizedTest(name = "when number is {0}")
+        @ValueSource(ints = {2, 4, 6, 8, 10})
+        void shouldReturnTrueForEvenNumbers(int number) {
+            assertTrue(calculator.isEven(number));
+        }
 
-    @DisplayName("Should return false for odd numbers")
-    @ParameterizedTest(name = "when number is {0}")
-    @MethodSource("oddNumbers")
-    void shouldReturnFalseForOddNumbers(int number) {
-        assertFalse(calculator.isEven(number));
-    }
-
-    @DisplayName("Should sum numbers and return result")
-    @ParameterizedTest(name = "{0} + {1} = {2}")
-    @MethodSource("sumProvider")
-    void shouldReturnFalseForOddNumbers(int a, int b, int expected) {
-        assertEquals(expected, calculator.sum(a, b));
+        @DisplayName("Should return false for odd numbers")
+        @ParameterizedTest(name = "when number is {0}")
+        @MethodSource("com.guisfco.CalculatorTest#oddNumbers")
+        void shouldReturnFalseForOddNumbers(int number) {
+            assertFalse(calculator.isEven(number));
+        }
     }
 
     private static Stream<Arguments> oddNumbers() {
