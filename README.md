@@ -14,5 +14,6 @@ A collection of Proof of Concepts (POCs) exploring various features, APIs, and l
 - [Concurrency: Locks and Atomic Variables (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-locks-atomic-vars/): Comparing synchronization techniques like synchronized methods, ReentrantLock, ReadWriteLock, and Atomic variables.
 - [Annotations and Reflections (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-annotations-reflections/): Creating custom annotations and using reflection to build a simplified routing system.
 - [Mockito (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-mockito/): Demonstrating the Mockito framework for unit testing, including mocking, spying, stubbing, and static mocking.
+- [JUnit 5 (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-junit-5/): Comprehensive guide to unit testing with JUnit 5, covering lifecycle hooks, nested tests, and parameterized testing.
 
 Each project contains its own `README.md` with detailed topic links to the source code.
