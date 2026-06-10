@@ -6,6 +6,9 @@ public class Main {
         IO.println("==== Java Date Time API ====");
         JavaTimeExamples.run();
 
+        IO.println("\n==== Legacy Java Date Time API ====");
+        LegacyJavaTimeExamples.run();
+
         IO.println("\n==== Joda Time ====");
         JodaTimeExamples.run();
     }
