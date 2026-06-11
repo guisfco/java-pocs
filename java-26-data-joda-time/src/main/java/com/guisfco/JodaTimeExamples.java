@@ -9,7 +9,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 
-public class JodaTimeExamples {
+public final class JodaTimeExamples {
 
     public static void run() {
         var localDate = LocalDate.now();

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LegacyJavaTimeExamples {
+public final class LegacyJavaTimeExamples {
 
     public static void run() {
         var now = new Date(); // this is mutable
