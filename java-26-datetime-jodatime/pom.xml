@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.guisfco</groupId>
-    <artifactId>java-26-date-joda-time</artifactId>
+    <artifactId>java-26-datetime-jodatime</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
