@@ -20,9 +20,4 @@ public final class ObjectMapper {
     public void printInstance() {
         IO.println(this);
     }
-
-    static void main() {
-        ObjectMapper.getInstance().printInstance();
-        ObjectMapper.getInstance().printInstance();
-    }
 }

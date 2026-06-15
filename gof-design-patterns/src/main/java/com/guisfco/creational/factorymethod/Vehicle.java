@@ -1,7 +1,7 @@
 package com.guisfco.creational.factorymethod;
 
-public interface Payment {
+public interface Vehicle {
 
-    void process();
+    void drive();
 
 }
