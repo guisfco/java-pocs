@@ -1,4 +1,14 @@
 package com.guisfco.structural.decorator;
 
-public class CoffeeDecorator {
+public abstract class CoffeeDecorator implements Coffee {
+
+    private final Coffee coffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.coffee = coffee;
+    }
+
+    public Coffee getCoffee() {
+        return coffee;
+    }
 }

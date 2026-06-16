@@ -1,8 +1,10 @@
 package com.guisfco.structural.adapter;
 
-public class FahrenheitSensor {
+import java.util.concurrent.ThreadLocalRandom;
 
-    public double getTemperature() {
-        return 86.0;
+public class LegacyTemperatureSensor {
+
+    public double getTemperatureInFahrenheit() {
+        return ThreadLocalRandom.current().nextDouble(20, 100);
     }
 }
