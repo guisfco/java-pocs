@@ -1,7 +1,5 @@
 package com.guisfco.behavioral.observer;
 
-import com.guisfco.behavioral.IO;
-
 public record ErrorAlert() implements Observer {
 
     @Override

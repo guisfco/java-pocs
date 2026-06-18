@@ -1,7 +1,5 @@
 package com.guisfco.behavioral.strategy;
 
-import com.guisfco.behavioral.IO;
-
 import java.math.BigDecimal;
 
 public class Main {

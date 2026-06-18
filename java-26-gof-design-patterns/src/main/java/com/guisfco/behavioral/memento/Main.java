@@ -1,7 +1,5 @@
 package com.guisfco.behavioral.memento;
 
-import com.guisfco.behavioral.IO;
-
 public class Main {
 
     static void main() {

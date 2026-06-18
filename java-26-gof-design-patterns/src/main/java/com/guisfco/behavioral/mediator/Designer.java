@@ -1,7 +1,5 @@
 package com.guisfco.behavioral.mediator;
 
-import com.guisfco.behavioral.IO;
-
 public class Designer implements Participant {
 
     private ChatMediator chatMediator;

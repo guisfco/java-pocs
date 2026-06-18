@@ -1,7 +1,5 @@
 package com.guisfco.behavioral.state;
 
-import com.guisfco.behavioral.IO;
-
 public class TrafficLight {
 
     private TrafficLightState state;
