@@ -1,6 +1,7 @@
 package com.guisfco;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class Main {
@@ -20,6 +21,25 @@ public class Main {
         IO.println(describe(1));
         IO.println(describe(null));
         IO.println(describe(BigDecimal.ONE));
+
+        IO.println("\n==== Record Patterns (JDK 21) ====");
+        IO.println(sum(new Point(5, 10)));
+
+        IO.println("\n==== Sequenced Collections (JDK 21) ====");
+        var names = List.of("Guilherme", "Yasmin", "Kira");
+        IO.println(names.getFirst());
+        IO.println(names.getLast());
+        IO.println(names.reversed());
+    }
+
+    public record Point(int x, int y) {
+    }
+
+    private static int sum(Object object) {
+        if (object instanceof Point(int x, int y)) {
+            return x + y;
+        }
+        return 0;
     }
 
     private static String describe(Object value) {
