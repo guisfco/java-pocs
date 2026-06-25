@@ -1,16 +1,18 @@
 package com.guisfco;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.stream.Gatherers;
 
 public class Main {
+
+    private static final ScopedValue<String> REQUEST_ID = ScopedValue.newInstance();
 
     static void main() {
         IO.println("==== Virtual Threads (JDK 21) ====");
@@ -41,7 +43,16 @@ public class Main {
         IO.println(names.reversed());
 
         IO.println("\n==== Gatherers (JDK 24) ====");
+        gatherers();
 
+        IO.println("\n==== Scoped Values (JDK 25) ====");
+        handleRequest(UUID.randomUUID().toString());
+
+        IO.println("\n==== HTTP/3 Client (JDK 26) ====");
+        httpClient();
+    }
+
+    private static void gatherers() {
         var numbers = List.of(1, 2, 3, 4, 5);
 
         var slidingWindow = numbers.stream()
@@ -55,12 +66,12 @@ public class Main {
                 .toList();
 
         IO.println(fixedWindow);
+    }
 
-        IO.println("\n==== HTTP/3 Client (JDK 26) ====");
-
+    private static void httpClient() {
         try (var client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_3).build()) {
             var request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://github.com/guisfco/java-pocs/blob/main/README.md"))
+                    .uri(URI.create("https://www.google.com"))
                     .GET()
                     .build();
 
@@ -86,10 +97,31 @@ public class Main {
 
     private static String describe(Object value) {
         return switch (value) {
-            case int number -> "Integer: " + number;
+            case Integer number -> "Integer: " + number;
             case String text -> "String: " + text;
             case null -> "Null";
             default -> "Unknown";
         };
+    }
+
+    public static void handleRequest(String requestId) {
+        ScopedValue.where(REQUEST_ID, requestId)
+                .run(() -> {
+                    validatePayment();
+                    processPayment();
+                    saveAuditLog();
+                });
+    }
+
+    private static void validatePayment() {
+        IO.println("Validating payment, requestId=" + REQUEST_ID.get());
+    }
+
+    private static void processPayment() {
+        IO.println("Processing payment, requestId=" + REQUEST_ID.get());
+    }
+
+    private static void saveAuditLog() {
+        IO.println("Saving audit log, requestId=" + REQUEST_ID.get());
     }
 }
