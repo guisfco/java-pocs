@@ -17,5 +17,6 @@ A collection of Proof of Concepts (POCs) exploring various features, APIs, and l
 - [JUnit 5 (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-junit-5/): Comprehensive guide to unit testing with JUnit 5, covering lifecycle hooks, nested tests, and parameterized testing.
 - [GoF Design Patterns (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-gof-design-patterns/): Comprehensive collection of Creational, Structural, and Behavioral design patterns implemented in Java.
 - [Date and Time (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-datetime-jodatime/): Comparing Legacy Java Time, Modern java.time API, and Joda-Time library.
+- [JDK Features (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-jdk-features/): Exploring modern JDK capabilities up to Java 26, including Virtual Threads, Pattern Matching, Stream Gatherers, Scoped Values, and HTTP/3 Client support.
 
 Each project contains its own `README.md` with detailed topic links to the source code.
