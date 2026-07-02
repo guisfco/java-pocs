@@ -18,5 +18,6 @@ A collection of Proof of Concepts (POCs) exploring various features, APIs, and l
 - [GoF Design Patterns (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-gof-design-patterns/): Comprehensive collection of Creational, Structural, and Behavioral design patterns implemented in Java.
 - [Date and Time (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-datetime-jodatime/): Comparing Legacy Java Time, Modern java.time API, and Joda-Time library.
 - [JDK Features (Java)](https://github.com/guisfco/java-pocs/blob/main/java-26-jdk-features/): Exploring modern JDK capabilities up to Java 26, including Virtual Threads, Pattern Matching, Stream Gatherers, Scoped Values, and HTTP/3 Client support.
+- [Spring Core IoC (Java)](https://github.com/guisfco/java-pocs/blob/main/spring-core-ioc/): Exploring Inversion of Control and Dependency Injection in Spring, including Java configuration, bean scoping, stereotype annotations, and manual injection comparisons.
 
 Each project contains its own `README.md` with detailed topic links to the source code.
