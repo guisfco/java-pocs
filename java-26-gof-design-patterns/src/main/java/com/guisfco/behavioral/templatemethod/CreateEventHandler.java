@@ -3,12 +3,12 @@ package com.guisfco.behavioral.templatemethod;
 public class CreateEventHandler extends EventHandler {
 
     @Override
-    public void beforeProcessing() {
+    protected void beforeProcessing() {
         IO.println("Before processing create event");
     }
 
     @Override
-    public void afterProcessing() {
+    protected void afterProcessing() {
         IO.println("After processing create event");
     }
 }

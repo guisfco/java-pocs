@@ -8,7 +8,7 @@ public abstract class EventHandler {
         afterProcessing();
     }
 
-    public abstract void beforeProcessing();
+    protected abstract void beforeProcessing();
 
-    public abstract void afterProcessing();
+    protected abstract void afterProcessing();
 }

@@ -8,7 +8,7 @@ public class Main {
         var order = new Order(new BigDecimal("100"), new StandardShipping());
         IO.println(order.total());
 
-        order = new Order(new BigDecimal("100"), new ExpressShipping());
+        order.setShippingStrategy(new ExpressShipping());
         IO.println(order.total());
     }
 }
